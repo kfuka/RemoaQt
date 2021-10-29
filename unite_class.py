@@ -58,14 +58,20 @@ class build_report:
             study_date.append(np.load(npfile)["study_date"][0])
             for fig in self.fig_list:
                 if np.load(npfile)["UID"][0] in fig:
-                    dicom_order_dict[npfile] = [np.load(npfile)["actime"][0], np.load(npfile)["UID"], fig,
+                    dicom_order_dict[npfile] = [np.load(npfile)["actime"][0],
+                                                np.load(npfile)["UID"],
+                                                fig,
                                                 np.load(npfile)["actime"]]
                     break
                 elif np.load(npfile)["UID"][1] in fig:
-                    dicom_order_dict[npfile] = [np.load(npfile)["actime"][0], np.load(npfile)["UID"], fig,
+                    dicom_order_dict[npfile] = [np.load(npfile)["actime"][0],
+                                                np.load(npfile)["UID"],
+                                                fig,
                                                 np.load(npfile)["actime"]]
                     break
-        files_sorted = sorted(dicom_order_dict.items(), key=lambda x: x[1], reverse=False)
+        files_sorted = sorted(dicom_order_dict.items(),
+                              key=lambda x: x[1],
+                              reverse=False)
         new_nps = []
         new_figs = []
         new_times = []
@@ -118,7 +124,8 @@ class build_report:
 
             for j in range(len(table1)):
                 table1[j, i, 4] = np.sqrt(
-                    table1[j, i, 0] ** 2 + table1[j, i, 2] ** 2 + max(table1[j, i, 1], table1[j, i, 3]) ** 2)
+                    table1[j, i, 0] ** 2 + table1[j, i, 2] ** 2
+                    + max(table1[j, i, 1], table1[j, i, 3]) ** 2)
 
         for mai in range(table1.shape[0]):
             active_gyo = 0
@@ -129,8 +136,10 @@ class build_report:
 
             for yoko in range(table1.shape[2]):
                 if active_gyo != 0:
-                    table1[mai, 5, yoko] = np.mean(table1[mai, :active_gyo, yoko])
-                    table1[mai, 6, yoko] = np.std(table1[mai, :active_gyo, yoko], ddof=1)
+                    table1[mai, 5, yoko] = np.mean(table1[mai,
+                                                   :active_gyo, yoko])
+                    table1[mai, 6, yoko] = np.std(table1[mai,
+                                                  :active_gyo, yoko], ddof=1)
                 else:
                     table1[mai, 5, yoko] = 0
                     table1[mai, 6, yoko] = 0
@@ -156,7 +165,9 @@ class build_report:
         :param table1: marker motion table
         :return:
         """
-        colour_table = np.zeros(len(table1[:, 0, 0]) * len(table1[0, :, 0]) * len(table1[0, 0, :])).reshape(
+        colour_table = np.zeros(len(table1[:, 0, 0])
+                                * len(table1[0, :, 0])
+                                * len(table1[0, 0, :])).reshape(
             [len(table1[:, 0, 0]), len(table1[0, :, 0]), len(table1[0, 0, :])])
         colour_table = colour_table.astype(str)
         for k in range(len(table1[:, 0, 0])):
@@ -167,8 +178,8 @@ class build_report:
                     elif j >= 4:
                         colour_table[k, i, j] = "white"
                     elif table1[k, i, j] > 5.0:
-                        if table1[k,i,j] > 10.0:
-                            colour_table[k,i,j] = "red"
+                        if table1[k, i, j] > 10.0:
+                            colour_table[k, i, j] = "red"
                         else:
                             colour_table[k, i, j] = "yellow"
                     else:
@@ -192,19 +203,23 @@ class build_report:
             row_labels = ["1", "2", "3", "4", "5", "mean", "std"]
             ax1 = table_fig.add_subplot(plot_row, 2, v)
             t1 = ax1.table(cellText=self.table1[i, :, :], colLabels=col_labels,
-                           rowLabels=row_labels, loc="center", cellColours=self.colour_table[i])
+                           rowLabels=row_labels, loc="center",
+                           cellColours=self.colour_table[i])
             t1.auto_set_font_size(False)
             t1.set_fontsize(10)
             t1.scale(1, 1)
-            ax1.set_title("Marker motion #" + str(v) + " (mm)", color=wave_colors[i])
+            ax1.set_title("Marker motion #" + str(v) + " (mm)",
+                          color=wave_colors[i])
             ax1.set_axis_off()
             cell_height = 1 / 8.0
             for pos, cell in t1.get_celld().items():
                 cell.set_height(cell_height)
 
             plt.tight_layout()
-            plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
-            plt.tick_params(axis='y', which='both', right=False, left=False, labelleft=False)
+            plt.tick_params(axis='x', which='both',
+                            bottom=False, top=False, labelbottom=False)
+            plt.tick_params(axis='y', which='both',
+                            right=False, left=False, labelleft=False)
             for pos in ['right', 'top', 'bottom', 'left']:
                 plt.gca().spines[pos].set_visible(False)
         table_fig.savefig(self.table_file)
@@ -216,9 +231,11 @@ class build_report:
         figure_number = len(self.time1s)
         for i in range(figure_number):
             ax1_3 = fig3.add_subplot(figure_number, 2, (i + 1) * 2 - 1)
-            ax1_3.plot(self.time1s[i], self.x1s[i], "o", label="resp.", c="r", alpha=0.5)
+            ax1_3.plot(self.time1s[i], self.x1s[i], "o",
+                       label="resp.", c="r", alpha=0.5)
             for j in range(np.array(self.y1s).shape[1]):
-                ax1_3.plot(self.time1s[i], self.y1s[i][j], "-.", label="#" + str(j + 1), c=wave_colors[j])
+                ax1_3.plot(self.time1s[i], self.y1s[i][j], "-.",
+                           label="#" + str(j + 1), c=wave_colors[j])
             ax1_3.set_title("Acq. time: " + str(new_times[i][0]))
             ax1_3.set_ylabel("Resp. Phase")
             ax1_3.set_xlabel("Time (sec.)")
@@ -226,9 +243,11 @@ class build_report:
                 ax1_3.legend()
 
             axy1_3 = fig3.add_subplot(figure_number, 2, (i + 1) * 2)
-            axy1_3.plot(self.time2s[i], self.x2s[i], "o", label="resp.", c="r", alpha=0.5)
+            axy1_3.plot(self.time2s[i], self.x2s[i],
+                        "o", label="resp.", c="r", alpha=0.5)
             for j in range(np.array(self.y2s).shape[1]):
-                axy1_3.plot(self.time2s[i], self.y2s[i][j], "-.", label="#" + str(j + 1), c=wave_colors[j])
+                axy1_3.plot(self.time2s[i], self.y2s[i][j],
+                            "-.", label="#" + str(j + 1), c=wave_colors[j])
             axy1_3.set_title("Acq. time: " + new_times[i][1])
             axy1_3.set_ylabel("Resp. Phase")
             axy1_3.set_xlabel("Time (sec.)")
@@ -242,7 +261,6 @@ class build_report:
         create correlation plot dynamically.
         :return:
         """
-        x1_fig = []
         x1s = np.array(self.x1s)
         y1s = np.array(self.y1s)
         x2s = np.array(self.x2s)
@@ -253,11 +271,15 @@ class build_report:
             y1_for_a_marker = []
             for i in range(x1s.shape[0]):  # 測定繰り返し数
                 if np.corrcoef(x1s[i, :], y1s[i, j, :])[0, 1] > threshold:
-                    x1_for_a_marker = np.concatenate([x1_for_a_marker, x1s[i, :]])
-                    y1_for_a_marker = np.concatenate([y1_for_a_marker, y1s[i, j, :]])
+                    x1_for_a_marker = \
+                        np.concatenate([x1_for_a_marker, x1s[i, :]])
+                    y1_for_a_marker = \
+                        np.concatenate([y1_for_a_marker, y1s[i, j, :]])
                 if np.corrcoef(x2s[i, :], y2s[i, j, :])[0, 1] > threshold:
-                    x1_for_a_marker = np.concatenate([x1_for_a_marker, x2s[i, :]])
-                    y1_for_a_marker = np.concatenate([y1_for_a_marker, y2s[i, j, :]])
+                    x1_for_a_marker = \
+                        np.concatenate([x1_for_a_marker, x2s[i, :]])
+                    y1_for_a_marker = \
+                        np.concatenate([y1_for_a_marker, y2s[i, j, :]])
             newx1s.append(x1_for_a_marker)
             newy1s.append(y1_for_a_marker)
 
@@ -272,7 +294,8 @@ class build_report:
         for i in range(len(y_1_2_2d)):  # iはマーカーの数
             v = i + 1
             ax1 = fig4.add_subplot(plot_row, 2, v)
-            ax1.plot(x_1_2_flat[i], y_1_2_2d[i], "o", c=wave_colors[i], mfc="None", alpha=0.5)
+            ax1.plot(x_1_2_flat[i], y_1_2_2d[i], "o",
+                     c=wave_colors[i], mfc="None", alpha=0.5)
             ax1.set_xlabel("Resp. phase (%)")
             ax1.set_ylabel("Marker phase (%)")
             ax1.set_title("Marker #" + str(i + 1), c=wave_colors[i])
@@ -281,15 +304,19 @@ class build_report:
             x1_pred_o = np.linspace(-5, 105, 110)
             x1_pred = sm.add_constant(x1_pred_o)
             y1_pred = re1.predict(x1_pred)
-            prstd, iv_l, iv_u = wls_prediction_std(re1, exog=x1_pred, alpha=0.05)
+            prstd, iv_l, iv_u = \
+                wls_prediction_std(re1, exog=x1_pred, alpha=0.05)
             ax1.plot(x1_pred_o, iv_l, "-.", c=wave_colors[i], alpha=0.3)
             ax1.plot(x1_pred_o, iv_u, "-.", c=wave_colors[i], alpha=0.3)
             ax1.plot(x1_pred_o, y1_pred, "-", c=wave_colors[i], alpha=0.5)
             ax1.set_xlim(-5, 105)
             ax1.set_ylim(-5, 105)
-            ax1.text(65, 0, "fit   : " + str(np.round(y1_pred[5], 1)) + "\nlowr: " + str(
-                np.round(iv_l[5], 1)) + "\nupr : " + str(np.round(iv_u[5], 1)) + "\npred.: " + str(
-                np.round((iv_u[5] - iv_l[5]) / 2, 1)) + "(%)", size=10, color="black")
+            ax1.text(65, 0, "fit   : " +
+                     str(np.round(y1_pred[5], 1)) +
+                     "\nlowr: " + str(np.round(iv_l[5], 1)) +
+                     "\nupr : " + str(np.round(iv_u[5], 1)) +
+                     "\npred.: " + str(np.round((iv_u[5] - iv_l[5]) / 2, 1)) +
+                     "(%)", size=10, color="black")
 
         plt.tight_layout()
         fig4.savefig(self.corr_file)
@@ -304,7 +331,9 @@ class build_report:
             soup = BeautifulSoup(txt, features="lxml")
 
         tag_pid = soup.new_tag("p")
-        tag_pid.string = "Study Date: " + str(self.study_date[0]) + ", Report created: " + datetime.datetime.now().strftime("%Y%m%d %H:%M:%S") +"\n"
+        tag_pid.string = "Study Date: " + str(self.study_date[0]) \
+            + ", Report created: " + \
+            datetime.datetime.now().strftime("%Y%m%d %H:%M:%S") + "\n"
         soup.body.append(tag_pid)
 
         tag_pid = soup.new_tag("p")
@@ -312,10 +341,12 @@ class build_report:
         soup.body.append(tag_pid)
 
         if self.gif_list != []:
-            tag_fig1 = soup.new_tag('img', src=self.gif_list[0].split("\\")[-1])
+            tag_fig1 = soup.new_tag('img',
+                                    src=self.gif_list[0].split("\\")[-1])
             soup.body.append(tag_fig1)
         else:
-            tag_fig1 = soup.new_tag('img', src=self.fig_list[0].split("\\")[-1])
+            tag_fig1 = soup.new_tag('img',
+                                    src=self.fig_list[0].split("\\")[-1])
             soup.body.append(tag_fig1)
 
         tag_table1 = soup.new_tag('img', src=self.table_file.rsplit("/")[-1])
@@ -333,7 +364,7 @@ class build_report:
 
 def main():
     patient_list = glob.glob("./data_base/*")
-    patient = build_report(patient_list[0])
+    _ = build_report(patient_list[0])
 
 
 if __name__ == '__main__':
