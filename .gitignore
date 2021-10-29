@@ -1,0 +1,9 @@
+__pycache__/csrt_multi_tracker.cpython-38.pyc
+*.pyc
+*.npz
+*.png
+*.html
+*.exe
+build/
+data_base/
+dist/
