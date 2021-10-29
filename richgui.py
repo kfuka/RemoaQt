@@ -1,5 +1,4 @@
 import sys
-import time
 import os
 import tkinter
 from PyQt5 import QtWidgets, QtCore
