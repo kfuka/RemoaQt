@@ -1,5 +1,4 @@
 import configparser
-import os
 import cv2
 import numpy as np
 
@@ -11,7 +10,6 @@ roi_size = int(config.get("settings", "roi_size"))
 
 
 def track_MIL(roi, array, sopuid, the_id, id):
-    
     """
     CSRT tracker, the name MIL though.
 
@@ -23,8 +21,8 @@ def track_MIL(roi, array, sopuid, the_id, id):
     :return: tracking history. ROI positions.
     """
     directory_path = data_base_folder + the_id
-    savedir = directory_path + "/deepimages/"
-    save_deep = "no"
+    _ = directory_path + "/deepimages/"
+    _ = "no"
 
     history = []
     history.append(list(roi))
@@ -57,7 +55,6 @@ def track_MIL(roi, array, sopuid, the_id, id):
     return history
 
 
-
 def from_uint16_to_uint8(img, groi):
     """
     Convert array from uint16 to uint8. groi holds ROI coordinate information.
@@ -72,12 +69,16 @@ def from_uint16_to_uint8(img, groi):
     :param groi: roi
     :return:
     """
-    cropped_img = img[int(groi[1]) - 10:int(groi[1]) + 40, int(groi[0]) - 10:int(groi[0]) + 40]
+    cropped_img = img[int(groi[1]) - 10:int(groi[1]) + 40,
+                      int(groi[0]) - 10:int(groi[0]) + 40]
     img = cv2.medianBlur(img, 3)
     img = img - 65535
-    ret, thresh1 = cv2.threshold(img, np.min([np.max(cropped_img) + 1000, 65535]), np.max(cropped_img),
-                                 cv2.THRESH_TRUNC)
-    ret, thresh2 = cv2.threshold(thresh1, np.max(np.min(cropped_img) - 1000, 0), np.min(cropped_img), cv2.THRESH_TOZERO)
+    ret, thresh1 = cv2.threshold(img,
+                                 np.min([np.max(cropped_img) + 1000, 65535]),
+                                 np.max(cropped_img), cv2.THRESH_TRUNC)
+    ret, thresh2 = cv2.threshold(thresh1,
+                                 np.max(np.min(cropped_img) - 1000, 0),
+                                 np.min(cropped_img), cv2.THRESH_TOZERO)
     thresh2 = thresh2 - np.min(thresh2)
     img3 = cv2.convertScaleAbs(thresh2, alpha=(255.0 / np.max(thresh2)))
     img2 = img3.astype(np.uint8)
