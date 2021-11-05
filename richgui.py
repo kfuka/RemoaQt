@@ -475,7 +475,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         try:
             self.clear()
             self.__init__()
-        except ValueError:
+        except Exception as _:
             pass
         getdicomclass = openDirectory()
         dicom_dir = getdicomclass.get()
